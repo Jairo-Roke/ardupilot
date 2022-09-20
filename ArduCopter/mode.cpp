@@ -40,7 +40,15 @@ Mode *Copter::mode_from_mode_num(const Mode::Number mode)
         case Mode::Number::STABILIZE:
             ret = &mode_stabilize;
             break;
+//##################### NEW MODE FUNCTION
 
+#if MODE_SGN_ENABLED == ENABLED
+        case Mode::Number::NEWSGN:
+            ret = &mode_newsgn;
+            break;
+#endif
+
+//#####################
         case Mode::Number::ALT_HOLD:
             ret = &mode_althold;
             break;

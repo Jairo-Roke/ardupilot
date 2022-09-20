@@ -39,6 +39,7 @@ public:
         AUTOROTATE =   26,  // Autonomous autorotation
         AUTO_RTL =     27,  // Auto RTL, this is not a true mode, AUTO will report as this mode if entered to perform a DO_LAND_START Landing sequence
         TURTLE =       28,  // Flip over after crash
+		NEWSGN =	   29,  // New Flight Mode
 
         // Mode number 127 reserved for the "drone show mode" in the Skybrush
         // fork at https://github.com/skybrush-io/ardupilot
@@ -1796,6 +1797,48 @@ private:
     int16_t line_num = 0;           // target line number
     bool is_suspended;              // true if zigzag auto is suspended
 };
+
+//######## CLASS FOR NEW FLIGHT MODE SGN
+
+class ModeNewsgn : public Mode {
+
+public:
+    // inherit constructor
+	using Mode::Mode;
+	Number mode_number() const override { return Number::NEWSGN; }
+
+
+    //modo loiter descomentar estas lineas y comentar las de modo stabilize
+	//bool init(bool ignore_checks) override;
+	//void run() override;
+
+	//Modo stabilize descomentar esta linea y comentar las de modo loiter
+	virtual void run() override;
+
+	/*  There are also some simple methods returning true/false
+	//  that you may want to override that control features such
+	//  as whether the vehicle can be armed in the new mode:
+	*/
+
+	bool requires_GPS() const override { return false; }
+	bool has_manual_throttle() const override { return true; }
+	bool allows_arming(AP_Arming::Method method) const override { return true; };
+	bool is_autopilot() const override { return false; }
+	bool has_user_takeoff(bool must_navigate) const override { return true; }
+	bool allows_autotune() const override { return true; }
+
+
+protected:
+
+    const char *name() const override { return "NEWSGN"; }
+    const char *name4() const override { return "NSGN"; }
+
+private:
+
+};
+
+//######## END CLASS FOR NEW FIGHT MODE
+
 
 #if MODE_AUTOROTATE_ENABLED == ENABLED
 class ModeAutorotate : public Mode {
