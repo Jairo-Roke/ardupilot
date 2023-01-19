@@ -175,6 +175,19 @@ Mode *Copter::mode_from_mode_num(const Mode::Number mode)
             break;
 #endif
 
+
+//--------------------------------------------------------------------
+#if MODE_SLIDING_ENABLED == ENABLED
+        case Mode::Number::SLIDING:
+            ret = &mode_sliding;
+            break;
+#endif
+//--------------------------------------------------------------------
+
+
+
+
+
         default:
             break;
     }

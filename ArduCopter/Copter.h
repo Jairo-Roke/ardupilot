@@ -224,6 +224,8 @@ public:
     friend class ModeZigZag;
     friend class ModeAutorotate;
     friend class ModeTurtle;
+    friend class ModeSLIDING;
+
 
     Copter(void);
 
@@ -1020,6 +1022,19 @@ private:
 #if MODE_TURTLE_ENABLED == ENABLED
     ModeTurtle mode_turtle;
 #endif
+
+//----------------------------------------------------------------
+
+#if MODE_SLIDING_ENABLED == ENABLED
+    ModeSLIDING mode_sliding;
+#endif
+
+//----------------------------------------------------------------
+
+
+
+
+
 
     // mode.cpp
     Mode *mode_from_mode_num(const Mode::Number mode);

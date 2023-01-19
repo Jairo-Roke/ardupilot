@@ -39,6 +39,7 @@ public:
         AUTOROTATE =   26,  // Autonomous autorotation
         AUTO_RTL =     27,  // Auto RTL, this is not a true mode, AUTO will report as this mode if entered to perform a DO_LAND_START Landing sequence
         TURTLE =       28,  // Flip over after crash
+        SLIDING=       29,  // Control Sliding Mode
 
         // Mode number 127 reserved for the "drone show mode" in the Skybrush
         // fork at https://github.com/skybrush-io/ardupilot
@@ -1747,6 +1748,55 @@ protected:
 
     uint32_t last_log_ms;   // system time of last time desired velocity was logging
 };
+
+
+//-------------------------------------------------------------------------------------------------------------
+class ModeSLIDING : public Mode {
+
+public:
+
+//   inherit constructor
+  AP_AHRS ahrs{AP_AHRS::FLAG_ALWAYS_USE_EKF};
+
+
+    using Mode::Mode;
+
+    Number mode_number() const override { return Number::SLIDING; }
+
+    void run() override;
+
+    bool requires_GPS() const override { return true; }
+
+    bool has_manual_throttle() const override { return true; }
+    bool allows_arming(AP_Arming::Method method) const override { return true; };
+    bool is_autopilot() const override { return false; }
+    bool allows_save_trim() const override { return true; }
+    bool allows_autotune() const override { return true; }
+    bool allows_flip() const override { return true; }
+//    bool set_target_location()const override { return true; }
+
+
+protected:
+
+    const char *name() const override { return "SLIDING"; }
+    const char *name4() const override { return "SLIDINGM"; }
+
+   const AP_HAL::HAL& hal = AP_HAL::get_HAL();
+   const AP_GPS &_gps = AP::gps();
+
+
+
+private:
+
+};
+
+
+//-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 class ModeZigZag : public Mode {        
 
