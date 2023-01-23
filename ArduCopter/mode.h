@@ -1754,41 +1754,123 @@ protected:
 class ModeSLIDING : public Mode {
 
 public:
-
-//   inherit constructor
-  AP_AHRS ahrs{AP_AHRS::FLAG_ALWAYS_USE_EKF};
-
-
+    // inherit constructor
     using Mode::Mode;
 
-    Number mode_number() const override { return Number::SLIDING; }
+    virtual void run() override;
 
-    void run() override;
+    bool init(bool ignore_checks) override;
 
-    bool requires_GPS() const override { return true; }
-
+    bool requires_GPS() const override { return false; }
     bool has_manual_throttle() const override { return true; }
     bool allows_arming(AP_Arming::Method method) const override { return true; };
     bool is_autopilot() const override { return false; }
-    bool allows_save_trim() const override { return true; }
-    bool allows_autotune() const override { return true; }
-    bool allows_flip() const override { return true; }
-//    bool set_target_location()const override { return true; }
-
 
 protected:
 
-    const char *name() const override { return "SLIDING"; }
-    const char *name4() const override { return "SLIDINGM"; }
-
-   const AP_HAL::HAL& hal = AP_HAL::get_HAL();
-   const AP_GPS &_gps = AP::gps();
-
-
+ const char *name() const override { return "SLIDING"; }
+ const char *name4() const override { return "SLIDINGM"; }
 
 private:
+    Vector3f posxyz;
+    Vector3f velxyz;
 
-};
+    float angulo_roll;
+
+    //Estructura para lectura del radio (rd.roll... etc)
+    struct radio_rc{
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+    int16_t th;
+    int16_t aux1;
+    int16_t aux2;
+    int16_t aux3;
+    }rd;
+
+    //Ganancias para la orientacion
+    struct kp_gains1{
+    uint8_t _roll;
+    uint8_t _pitch;
+    uint8_t _yaw;
+    }kp1{20,20,20};
+
+    struct kd_gains1{
+        uint8_t _roll;
+        uint8_t _pitch;
+        uint8_t _yaw;
+        }kd1{90,90,100};
+
+    struct pose{
+            float _x;
+            float _y;
+            float _z;
+        }errors,sp,ctrl;
+
+    //Ganancias para la altura y posicion
+        struct kp_gains2{
+            uint8_t _x;
+            uint8_t _y;
+            uint8_t _z;
+            }kp2{20,30,120};
+
+            struct kd_gains2{
+                uint8_t _x;
+                uint8_t _y;
+                uint8_t _z;
+                }kd2{40,40,40};
+
+     //Bandera de activaci\F3n para la altura
+     bool flag_spz = true;
+
+     //Bandera para ubicar la posici\F3n
+     bool flag_spxy = true;
+
+};  //Fin de la CLASE
+
+
+
+
+
+
+
+
+// public:
+
+// //   inherit constructor
+//   AP_AHRS ahrs{AP_AHRS::FLAG_ALWAYS_USE_EKF};
+
+
+//     using Mode::Mode;
+
+//     Number mode_number() const override { return Number::SLIDING; }
+
+//     void run() override;
+
+//     bool requires_GPS() const override { return true; }
+
+//     bool has_manual_throttle() const override { return true; }
+//     bool allows_arming(AP_Arming::Method method) const override { return true; };
+//     bool is_autopilot() const override { return false; }
+//     bool allows_save_trim() const override { return true; }
+//     bool allows_autotune() const override { return true; }
+//     bool allows_flip() const override { return true; }
+// //    bool set_target_location()const override { return true; }
+
+
+// protected:
+
+//     const char *name() const override { return "SLIDING"; }
+//     const char *name4() const override { return "SLIDINGM"; }
+
+//    const AP_HAL::HAL& hal = AP_HAL::get_HAL();
+//    const AP_GPS &_gps = AP::gps();
+
+
+
+// private:
+
+// };
 
 
 //-------------------------------------------------------------------------------------------------------------
