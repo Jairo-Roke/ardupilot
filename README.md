@@ -162,3 +162,4 @@ for reviewing patches on their specific area.
 # ardupilot_4_4_sliding
 # ardupilot_4_4_sliding_mode_
 # ardupilot_4_4
+# ardupilot_4_4_sliding_mode_
